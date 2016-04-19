@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1> 编辑用户信息 </h1>
+<div>
+<form action="" method="post" name="edit" enctype="multipart/form-data">
+    {{form.hidden_tag()}}
+    <p>
+        姓名:<br>
+        {{form.name}}<br>
+    </p>
+    <p>
+        头像:<br>
+        {{form.avator}}<br>
+    </p> 
+    <p>{{form.remember_me}}Remember Me</p>
+    <button class="btn btn-large btn-primary" type="submit">登陆</button>
+</form>
+</div>
+{% endblock %}
+
