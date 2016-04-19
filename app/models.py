@@ -16,6 +16,8 @@ class User(db.Model):
 
     def avatar(self):
         img_id = self.avator_id
+        if img_id is None:
+            return url_for('static', filename='./avators/default.jpg')
         return Image.query.get(img_id).get_url()
 
     def __repr__(self):
