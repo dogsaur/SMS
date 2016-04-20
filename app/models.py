@@ -17,7 +17,7 @@ class User(db.Model):
     def avatar(self):
         img_id = self.avator_id
         if img_id is None:
-            return url_for('static', filename='./avators/default.jpg')
+            return url_for('static', filename='./pics/default.jpg')
         return Image.query.get(img_id).get_url()
 
     def __repr__(self):
@@ -44,7 +44,7 @@ class Image(db.Model):
         return '<Image file = %r>' % (self.path)
 
     def get_url(self):
-        return url_for('static', filename='./avators/' + self.path)
+        return url_for('static', filename='./pics/' + self.path)
 
 
 class Customer(db.Model):
@@ -61,6 +61,10 @@ class Product(db.Model):
     product_name = db.Column(db.String)
     bar_code = db.Column(db.Integer)
     price = db.Column(db.Numeric)
+    picture_id = db.Column(db.Integer, db.ForeignKey('image.id'))
+
+    def __repr__(self):
+        return '<Product name=%r, price=%r>' % (self.product_name, self.price)
 
 
 class TradeRecord(db.Model):
