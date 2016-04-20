@@ -1,4 +1,114 @@
 {% extends "layout.html" %}
+
+{% block css %}
+<link href="{{url_for('static', filename='js/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/buttons.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/fixedHeader.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/responsive.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/scroller.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block content %}
-This is products.html
+<table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+	<thead>
+		<tr role="row">
+			<th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 88px;">商品编号</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">商品名称</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">图片</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">售价</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">销量</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">库存</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">详情</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for product in products %}
+			<tr role="row" class="{{loop.cycle('odd', 'even')}}">
+				<td class="sorting_1"> {{product.id}} </td>
+				<td>{{product.product_name}}</td>
+				<td>as if a image</td>
+				<td>{{product.price}}</td>
+				<td>0</td>
+				<td>0</td>
+				<td>详情</td>
+				<td>操作</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>
+{% endblock %}
+
+{% block js %}
+<!-- Datatables-->
+<script src="{{url_for('static', filename='js/datatables/jquery.dataTables.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.bootstrap.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.buttons.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/buttons.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/jszip.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/pdfmake.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/vfs_fonts.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/buttons.html5.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/buttons.print.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.fixedHeader.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.keyTable.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.responsive.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/responsive.bootstrap.min.js')}}"></script>
+<script src="{{url_for('static', filename='js/datatables/dataTables.scroller.min.js')}}"></script>
+<!-- pace -->
+<script src="{{url_for('static', filename='js/pace/pace.min.js')}}"></script>
+<script>
+	var handleDataTableButtons = function() {
+		"use strict";
+		0 !== $("#datatable-buttons").length && $("#datatable-buttons").DataTable({
+			dom: "Bfrtip",
+			buttons: [{
+				extend: "copy",
+				className: "btn-sm"
+			}, {
+				extend: "csv",
+				className: "btn-sm"
+			}, {
+				extend: "excel",
+				className: "btn-sm"
+			}, {
+				extend: "pdf",
+				className: "btn-sm"
+			}, {
+				extend: "print",
+				className: "btn-sm"
+			}],
+			responsive: !0
+		})
+	},
+	TableManageButtons = function() {
+		"use strict";
+		return {
+			init: function() {
+				handleDataTableButtons()
+			}
+		}
+	}();
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#datatable').dataTable();
+		$('#datatable-keytable').DataTable({
+			keys: true
+		});
+		$('#datatable-responsive').DataTable();
+		$('#datatable-scroller').DataTable({
+			ajax: "js/datatables/json/scroller-demo.json",
+			deferRender: true,
+			scrollY: 380,
+			scrollCollapse: true,
+			scroller: true
+		});
+		var table = $('#datatable-fixed-header').DataTable({
+			fixedHeader: true
+		});
+	});
+	TableManageButtons.init();
+</script>
 {% endblock %}

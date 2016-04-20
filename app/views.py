@@ -2,9 +2,8 @@ from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators
 from .forms import LoginForm, UserProfileForm
-from .models import User, Image, Customer
+from .models import User, Image, Customer, Product
 
-import sys
 
 
 @app.route('/')
@@ -101,7 +100,8 @@ def customers():
 @app.route('/products')
 @login_required
 def products():
-    return render_template('products.html')
+    products = Product.query.all()
+    return render_template('products.html', products=products)
 
 
 @app.route('/staffs')
