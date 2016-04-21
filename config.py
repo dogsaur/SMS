@@ -12,6 +12,6 @@ WTF_CSRF_ENABLED = False
 SECRET_KEY = 'iskisxfafxnflxia;'
 
 # file uploads
-UPLOADED_AVATORS_DEST = 'app/static/avators'
+UPLOADED_AVATORS_DEST = 'app/static/avatars'
 UPLOADED_PICS_DEST = 'app/static/pics'
 
