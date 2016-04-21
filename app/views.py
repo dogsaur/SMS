@@ -1,9 +1,8 @@
 from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators
-from .forms import LoginForm, UserProfileForm
+from .forms import LoginForm, UserProfileForm, ProductInfoForm
 from .models import User, Image, Customer, Product
-
 
 
 @app.route('/')
@@ -102,6 +101,20 @@ def customers():
 def products():
     products = Product.query.all()
     return render_template('products.html', products=products)
+
+
+@app.route('/edit_product/<product_id>')
+@login_required
+def edit_product(product_id):
+    product = Product.query.get(product_id)
+    if product is not None:
+        form = ProductInfoForm(name=product.product_name,
+                               barcode=product.bar_code,
+                               price=product.price)
+    else:
+        form = ProductInfoForm()
+
+    return render_template('edit_product.html', form=form)
 
 
 @app.route('/staffs')

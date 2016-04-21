@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% block title %}编辑商品{% endblock %}
+{% block content %}
+<form class="form-horizontal form-label-left" novalidate="">
+  <span class="section">商品信息</span>
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">商品名称 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.name(id="name", class_="form-control col-md-7 col-xs-12",  required="required", type="text")}}
+    </div>
+  </div>
+
+  <div class="item form-group"> 
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">条码号 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.barcode(type="text", id="barcode",  required="required", class="form-control col-md-7 col-xs-12")}}
+      <!--input type="text" id="email" name="email" required="required" class="form-control col-md-7 col-xs-12" data-inputmask="'mask': '999-99999-9999-9|x'"-->
+    </div>
+  </div>
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="number">商品售价 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <input type="number" id="number" name="number" required="required" data-validate-minmax="0,100000" class="form-control col-md-7 col-xs-12">
+    </div>
+  </div>
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="image">商品图片 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <input type="file" id="image" name="image" required="required" class="form-control col-md-7 col-xs-12">
+    </div>
+  </div>
+  
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">备注
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <textarea id="textarea" name="textarea" class="form-control col-md-7 col-xs-12"></textarea>
+    </div>
+  </div>
+  <div class="ln_solid"></div>
+  <div class="form-group">
+    <div class="col-md-6 col-md-offset-3">
+      <!--button type="submit" class="btn btn-primary">Cancel</button-->
+      <button id="send" type="submit" class="btn btn-success">Submit</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<!-- form validation -->
+<script src="{{url_for('static', filename='js/validator/validator.js')}}"></script>
+<!-- input mask -->
+<script src="{{url_for('static', filename='js/input_mask/jquery.inputmask.js')}}"></script>
+
+<script>
+    // initialize the validator function
+    validator.message['date'] = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+    .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+    .on('change', 'select.required', validator.checkField)
+    .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    $('.multi.required')
+    .on('keyup blur', 'input', function() {
+      validator.checkField.apply($(this).siblings().last()[0]);
+    });
+
+    // bind the validation to the form submit event
+    //$('#send').click('submit');//.prop('disabled', true);
+
+    $('form').submit(function(e) {
+      e.preventDefault();
+      var submit = true;
+      // evaluate the form using generic validaing
+      if (!validator.checkAll($(this))) {
+        submit = false;
+      }
+
+      if (submit)
+        this.submit();
+      return false;
+    });
+
+    /* FOR DEMO ONLY */
+    $('#vfields').change(function() {
+      $('form').toggleClass('mode2');
+    }).prop('checked', false);
+
+    $('#alerts').change(function() {
+      validator.defaults.alerts = (this.checked) ? false : true;
+      if (this.checked)
+        $('form .alert').remove();
+    }).prop('checked', false);
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $(":input").inputmask();
+    });
+  </script>
+  {% endblock %}
