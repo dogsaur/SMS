@@ -44,7 +44,7 @@ class Image(db.Model):
         return '<Image file = %r>' % (self.path)
 
     def get_url(self):
-        return url_for('static', filename='./avatars/' + self.path)
+        return url_for('static', filename=self.path)
 
 
 class Customer(db.Model):

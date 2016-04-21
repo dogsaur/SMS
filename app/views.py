@@ -71,7 +71,7 @@ def edit_user_profile():
     form = UserProfileForm()
     if form.validate_on_submit():
         filename = avators.save(request.files['avator'])
-        img = Image(path=filename)
+        img = Image(path="avatars/" + filename)
         db.session.add(img)
         db.session.commit()
         g.user.avator_id = img.id
@@ -128,7 +128,7 @@ def edit_product(product_id):
         product.bar_code = form.barcode.data
         try:
             filename = pics.save(request.files['image'])
-            img = Image(path=filename)
+            img = Image(path="pics/" + filename)
             db.session.add(img)
             db.session.commit()
             product.picture_id = img.id
