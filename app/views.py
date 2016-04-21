@@ -1,6 +1,6 @@
 from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
-from app import app, db, lm, avators
+from app import app, db, lm, avators, pics
 from .forms import LoginForm, UserProfileForm, ProductInfoForm
 from .models import User, Image, Customer, Product
 
@@ -103,17 +103,40 @@ def products():
     return render_template('products.html', products=products)
 
 
-@app.route('/edit_product/<product_id>')
+@app.route('/edit_product/<product_id>', methods=['GET', 'POST'])
 @login_required
 def edit_product(product_id):
     product = Product.query.get(product_id)
     if product is not None:
         form = ProductInfoForm(name=product.product_name,
                                barcode=product.bar_code,
-                               price=product.price)
+                               price=product.price,
+                               image=product.picture())
     else:
         form = ProductInfoForm()
 
+    app.logger.error('start')
+    app.logger.error(form.errors)
+    if form.validate():
+        app.logger.error('validate')
+
+    if form.validate_on_submit():
+        if product is None:
+            product = Product()
+        product.product_name = form.name.data
+        product.price = form.price.data
+        product.bar_code = form.barcode.data
+        try:
+            filename = pics.save(request.files['image'])
+            img = Image(path=filename)
+            db.session.add(img)
+            db.session.commit()
+            product.picture_id = img.id
+        except Exception as e:
+            app.logger.error(e)
+        db.session.add(product)
+        db.session.commit()
+        return redirect(url_for('products'))
     return render_template('edit_product.html', form=form)
 
 

@@ -34,8 +34,8 @@
 		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
 			<td class="sorting_1"> {{product.id}} </td>
 			<td>{{product.product_name}}</td>
-			<td>as if a image</td>
-			<td>{{product.price}}</td>
+			<td><img src="{{product.picture()}}" width="75" height="75"></td>
+			<td>{{'%0.2f' | format(product.price)}}</td>
 			<td>0</td>
 			<td>0</td>
 			<td>

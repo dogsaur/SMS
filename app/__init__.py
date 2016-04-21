@@ -20,4 +20,8 @@ lm.login_view = 'login'
 avators = UploadSet('avators', IMAGES)
 configure_uploads(app, avators)
 
+pics = UploadSet('pics', IMAGES)
+configure_uploads(app, pics)
+
+
 from app import views, models

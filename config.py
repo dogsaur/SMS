@@ -13,4 +13,5 @@ SECRET_KEY = 'iskisxfafxnflxia;'
 
 # file uploads
 UPLOADED_AVATORS_DEST = 'app/static/avators'
+UPLOADED_PICS_DEST = 'app/static/pics'
 

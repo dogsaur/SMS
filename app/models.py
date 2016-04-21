@@ -63,6 +63,13 @@ class Product(db.Model):
     price = db.Column(db.Numeric)
     picture_id = db.Column(db.Integer, db.ForeignKey('image.id'))
 
+    def picture(self):
+        picture_id = self.picture_id
+        if picture_id is None:
+            return url_for('static', filename='./pics/default.jpg')
+        return Image.query.get(picture_id).get_url()
+
+
     def __repr__(self):
         return '<Product name=%r, price=%r>' % (self.product_name, self.price)
 
