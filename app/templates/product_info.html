@@ -1,0 +1,12 @@
+<!-- extend layout -->
+{% extends "layout.html" %}
+
+{% block content %}
+<td><img src="{{product.picture()}}" width=120 height=120></td>
+<h1>商品编号: {{product.id}}</h1>
+<h1>条形码：{{product.bar_code}}</h1>
+<h1>商品名称: {{product.product_name}}</h1>
+<h1>价格：{{product.price}}</h1>
+<h1>供货商：</h1>
+
+{% endblock %}

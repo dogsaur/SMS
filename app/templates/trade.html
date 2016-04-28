@@ -19,7 +19,7 @@
 		{% set product = Product.query.get(trade.product_id) %}
 		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
 			<td class="sorting_1"> {{trade.id}} </td>
-			<td>{{product.product_name}}</td>
+			<td><a href="{{url_for('product_info', product_id = product.id)}}">{{product.product_name}}</a></td>
 			<td>0</td>
 			<td>{{'%0.2f' | format(product.price)}}</td>
 			<td>{{trade.time}}</td>

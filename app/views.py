@@ -57,6 +57,15 @@ def user(username):
         return redirect(url_for('index'))
     return render_template('user.html', user=user)
 
+@app.route('/product_info/<product_id>')
+@login_required
+def product_info(product_id):
+    product = Product.query.get(product_id)
+    if product_id is None:
+        flash('Product ' + product_id + 'not found.')
+        return redirect(url_for('index'))
+    return render_template('product_info.html', product=product)
+
 
 @app.route('/logout')
 @login_required
