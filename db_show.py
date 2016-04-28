@@ -10,3 +10,5 @@ print(images)
 products = models.Product.query.all()
 print(products)
 
+trades = models.TradeRecord.query.all()
+print(trades)
