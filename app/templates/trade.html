@@ -1,6 +1,33 @@
 {% extends "layout.html" %}
 {% block title %}销售{% endblock%}
 {% block content %}
-This is trade.html
+<table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+	<thead>
+		<tr role="row">
+			<th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 88px;">流水号</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">商品名称</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">数量</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">价格</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">交易时间</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">收银员</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">客户</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		{% for trade in trades %}
+		{% set product = Product.query.get(trade.product_id) %}
+		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
+			<td class="sorting_1"> {{trade.id}} </td>
+			<td>{{product.product_name}}</td>
+			<td>0</td>
+			<td>{{'%0.2f' | format(product.price)}}</td>
+			<td>{{trade.time}}</td>
+			<td>收银1</td>
+			<td>客户1</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 {% endblock %}
 

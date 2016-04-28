@@ -2,7 +2,7 @@ from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators, pics
 from .forms import LoginForm, UserProfileForm, ProductInfoForm
-from .models import User, Image, Customer, Product
+from .models import User, Image, Customer, Product, TradeRecord
 
 
 @app.route('/')
@@ -86,7 +86,8 @@ def edit_user_profile():
 @app.route('/trade')
 @login_required
 def trade():
-    return render_template('trade.html')
+    trades = TradeRecord.query.all()
+    return render_template('trade.html', trades = trades, Product = Product)
 
 
 @app.route('/customers')
