@@ -10,8 +10,8 @@ class User(db.Model):
     name = db.Column(db.String)
     email = db.Column(db.String(128), index=True, unique=True)
     avator_id = db.Column(db.Integer, db.ForeignKey('image.id'))
-    group = db.Column(db.Integer, default = 1)
-    right = db.Column(db.Integer, default = 1)
+    group = db.Column(db.Integer, default=1)
+    right = db.Column(db.Integer, default=1)
 
     def info_link(self):
         return url_for(str('user'), nickname=self.username)
@@ -23,7 +23,8 @@ class User(db.Model):
         return Image.query.get(img_id).get_url()
 
     def __repr__(self):
-        return '<User %r>' % (self.username)
+        return '<User %r, group:%r, right:%r>' % (
+                self.username, self.group, self.right)
 
     def is_authenticated(self):
         return True
@@ -70,7 +71,6 @@ class Product(db.Model):
         if picture_id is None:
             return url_for('static', filename='./avatars/default.jpg')
         return Image.query.get(picture_id).get_url()
-
 
     def __repr__(self):
         return '<Product name=%r, price=%r>' % (self.product_name, self.price)
