@@ -16,6 +16,14 @@ class UserProfileForm(Form):
     name = StringField('username', validators=[DataRequired()])
     avator = FileField('avator')
 
+class AddSupplyForm(Form):
+    name = StringField('name', validators=[DataRequired()])
+    city = StringField('city')
+    buyer = StringField('buyer')
+    order_contact = StringField('order_contact')
+    contact_information = StringField('contact_information',validators=[DataRequired()])
+
+
 
 class ProductInfoForm(Form):
     name = StringField('name')

@@ -1,8 +1,8 @@
 from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators, pics
-from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm
-from .models import User, Image, Customer, Product, TradeRecord
+from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm, AddSupplyForm
+from .models import User, Image, Customer, Product, TradeRecord, Supply
 
 
 @app.route('/')
@@ -84,6 +84,21 @@ def add_user():
         db.session.add(user)
         db.session.commit()
     return render_template("add_user.html", form = form)
+
+@app.route('/add_supply',methods=['GET','POST'])
+@login_required
+def add_supply():
+    form = AddSupplyForm()
+    if form.validate_on_submit():
+        supply = Supply()
+        supply.name = form.name.data
+        supply.city = form.city.data
+        supply.buyer = form.buyer.data
+        supply.order_contact = form.order_contact.data
+        supply.contact_information = form.contact_information.data
+        db.session.add(supply)
+        db.session.commit()
+    return render_template("add_supply.html",form =form)
 
 @app.route('/edit_profile/<uid>', methods=['GET', 'POST'])
 @login_required
@@ -174,7 +189,8 @@ def staffs():
 @app.route('/suppliers')
 @login_required
 def suppliers():
-    return render_template('suppliers.html')
+    suppliers = Supply.query.all()
+    return render_template('suppliers.html',suppliers = suppliers)
 
 
 @app.route('/project_info')

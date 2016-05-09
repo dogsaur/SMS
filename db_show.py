@@ -12,3 +12,6 @@ print(products)
 
 trades = models.TradeRecord.query.all()
 print(trades)
+
+suppliers = models.Supply.query.all()
+print(suppliers)

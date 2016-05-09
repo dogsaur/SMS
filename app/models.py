@@ -82,3 +82,14 @@ class TradeRecord(db.Model):
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))
     time = db.Column(db.DateTime)
+
+class Supply(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.Integer)
+    city = db.Column(db.String)
+    buyer = db.Column(db.String)
+    order_contact = db.Column(db.String)
+    contact_information = db.Column(db.String)
+    
+    def __repr__(self):
+        return '<Supply name=%r, city=%r>' % (self.name, self.city)

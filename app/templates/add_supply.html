@@ -1,0 +1,108 @@
+{% extends 'layout.html' %}
+{% block title %}编辑供应商{% endblock %}
+{% block content %}
+<form enctype="multipart/form-data" class="form-horizontal form-label-left" method="post">
+  {{form.hidden_tag()}}
+  <span class="section">增加供应商</span>
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">厂商名称 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.name(id="name", class_="form-control col-md-7 col-xs-12",  required="required", type="text")}}
+    </div>
+  </div>
+
+  <div class="item form-group"> 
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">区域 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.city(type="text", id="barcode",  required="required", class="form-control col-md-7 col-xs-12")}}
+    </div>
+  </div>
+
+  <div class="item form-group"> 
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">订货联系人 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.order_contact(type="text", id="ordercontact",  required="required", class="form-control col-md-7 col-xs-12")}}
+    </div>
+  </div>
+  <div class="item form-group"> 
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">联系方式 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.contact_information(type="text", id="contact",  required="required", class="form-control col-md-7 col-xs-12")}}
+    </div>
+  </div>
+  <div class="item form-group"> 
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">采购员 <span class="required">*</span>
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.buyer(type="text", id="buyer",  required="required", class="form-control col-md-7 col-xs-12")}}
+    </div>
+  </div>
+    <div class="ln_solid"></div>
+  <div class="form-group">
+    <div class="col-md-6 col-md-offset-3">
+      <!--button type="submit" class="btn btn-primary">Cancel</button-->
+      <button type="submit" class="btn btn-success">提交</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
+
+{% block js %}
+<!-- form validation -->
+<script src="{{url_for('static', filename='js/validator/validator.js')}}"></script>
+<!-- input mask -->
+<script src="{{url_for('static', filename='js/input_mask/jquery.inputmask.js')}}"></script>
+
+<script>
+    // initialize the validator function
+    validator.message['date'] = 'not a real date';
+
+    // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
+    $('form')
+    .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+    .on('change', 'select.required', validator.checkField)
+    .on('keypress', 'input[required][pattern]', validator.keypress);
+
+    $('.multi.required')
+    .on('keyup blur', 'input', function() {
+      validator.checkField.apply($(this).siblings().last()[0]);
+    });
+
+    // bind the validation to the form submit event
+    //$('#send').click('submit');//.prop('disabled', true);
+
+    $('form').submit(function(e) {
+      e.preventDefault();
+      var submit = true;
+      // evaluate the form using generic validaing
+      if (!validator.checkAll($(this))) {
+        submit = false;
+      }
+
+      if (submit)
+        this.submit();
+      return false;
+    });
+
+    /* FOR DEMO ONLY */
+    $('#vfields').change(function() {
+      $('form').toggleClass('mode2');
+    }).prop('checked', false);
+
+    $('#alerts').change(function() {
+      validator.defaults.alerts = (this.checked) ? false : true;
+      if (this.checked)
+        $('form .alert').remove();
+    }).prop('checked', false);
+  </script>
+
+  <script>
+    $(document).ready(function() {
+      $(":input").inputmask();
+    });
+  </script>
+  {% endblock %}
