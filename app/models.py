@@ -10,6 +10,8 @@ class User(db.Model):
     name = db.Column(db.String)
     email = db.Column(db.String(128), index=True, unique=True)
     avator_id = db.Column(db.Integer, db.ForeignKey('image.id'))
+    group = db.Column(db.Integer, default = 1)
+    right = db.Column(db.Integer, default = 1)
 
     def info_link(self):
         return url_for(str('user'), nickname=self.username)

@@ -1,5 +1,59 @@
 {% extends "layout.html" %}
-{% block title %}员工{% endblock%}
+{% block title %}员工信息{% endblock %}
+{% block css %}
+<link href="{{url_for('static', filename='js/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/buttons.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/fixedHeader.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/responsive.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{url_for('static', filename='js/datatables/scroller.bootstrap.min.css')}}" rel="stylesheet" type="text/css" />
+{% endblock %}
 {% block content %}
-This is staffs.html
+<div>
+	<h3>员工信息</h3>
+</div>
+<div class="dt-buttons btn-group">
+	<a type="button" class="btn btn-primary" href="{{url_for('add_user')}}">添加</a>
+</div>
+<!--添加员工信息-->
+<br/>
+<table id="datatable" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="datatable_info">
+	<thead>
+		<tr role="row">
+			<th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 88px;">员工编号</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">员工类别</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">姓名</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">状态</th>
+			<!--权限需有链接-->
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">权限</th>
+			
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+	    <!--员工信息-->
+		{% for user in users %}
+		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
+			<td class="sorting_1"> {{user.id}} </td>
+			<td>{{user.name}}</td>
+			<td><img src="{{user.avatar()}}" width="75" height="75"></td>
+			<td>0</td>
+			<td>0</td>
+			<td>
+				<div class="btn-group" >
+					<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">操作 <span class="caret"></span>
+					</button>
+					<ul role="menu" class="dropdown-menu">
+						<li><a href="#">详情</a></li>
+						<li><a href="{{url_for('edit_user_profile', uid=user.id)}} ">修改</a></li>
+						<li><a href="#">进货</a></li>
+						<li class="divider"></li><li><a href="#">删除</a></li>
+					</ul>
+				</div>
+			</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
 {% endblock %}

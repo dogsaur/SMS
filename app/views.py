@@ -1,7 +1,7 @@
 from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators, pics
-from .forms import LoginForm, UserProfileForm, ProductInfoForm
+from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm
 from .models import User, Image, Customer, Product, TradeRecord
 
 
@@ -73,18 +73,32 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
-@app.route('/edit_profile', methods=['GET', 'POST'])
+@app.route('/add_user', methods=['GET', 'POST'])
 @login_required
-def edit_user_profile():
+def add_user():
+    form = AddUserForm()
+    if form.validate_on_submit():
+        user = User()
+        user.username = form.username.data
+        user.password = form.password.data
+        db.session.add(user)
+        db.session.commit()
+    return render_template("add_user.html", form = form)
+
+@app.route('/edit_profile/<uid>', methods=['GET', 'POST'])
+@login_required
+def edit_user_profile(uid):
     form = UserProfileForm()
+    user = User.query.get(uid)
+    if user is None:
+        user = User()
     if form.validate_on_submit():
         filename = avators.save(request.files['avator'])
         img = Image(path="avatars/" + filename)
         db.session.add(img)
         db.session.commit()
-        g.user.avator_id = img.id
-        db.session.add(g.user)
+        user.avator_id = img.id
+        db.session.add(user)
         db.session.commit()
         # g.user.store()
         flash('photo saved')
@@ -153,7 +167,8 @@ def edit_product(product_id):
 @app.route('/staffs')
 @login_required
 def staffs():
-    return render_template('staffs.html')
+    users = User.query.all()
+    return render_template('staffs.html', users = users)
 
 
 @app.route('/suppliers')
