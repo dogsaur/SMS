@@ -89,7 +89,13 @@ class Supply(db.Model):
     city = db.Column(db.String)
     buyer = db.Column(db.String)
     order_contact = db.Column(db.String)
-    contact_information = db.Column(db.String)
+    tel = db.Column(db.String)
+    address = db.Column(db.String)
+    email = db.Column(db.String)
+    manager = db.Column(db.String)
+    payment_method = db.Column(db.String)
+    bank_account = db.Column(db.String)
+    evidence = db.Column(db.String)
     
     def __repr__(self):
         return '<Supply name=%r, city=%r>' % (self.name, self.city)

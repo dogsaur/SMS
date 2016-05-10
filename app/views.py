@@ -95,7 +95,7 @@ def add_supply():
         supply.city = form.city.data
         supply.buyer = form.buyer.data
         supply.order_contact = form.order_contact.data
-        supply.contact_information = form.contact_information.data
+        supply.tel = form.tel.data
         db.session.add(supply)
         db.session.commit()
     return render_template("add_supply.html",form =form)
@@ -177,6 +177,56 @@ def edit_product(product_id):
         db.session.commit()
         return redirect(url_for('products'))
     return render_template('edit_product.html', form=form)
+
+@app.route('/edit_supply/<supply_id>', methods=['GET', 'POST'])
+@login_required
+def edit_supply(supply_id):
+    supply = Supply.query.get(supply_id)
+    if supply is not None:
+        form = AddSupplyForm(name=supply.name,
+                               city=supply.city,
+                               buyer=supply.buyer,
+                               order_contact=supply.order_contact,
+                               tel=supply.tel,
+                               address=supply.address,
+                               email=supply.email,
+                               payment_mathod=supply.payment_method,
+                               bank_account=supply.bank_account,
+                               evidence=supply.evidence)
+    else:
+        form = AddSupplyForm()
+
+    app.logger.error('start')
+    app.logger.error(form.errors)
+    if form.validate():
+        app.logger.error('validate')
+
+    if form.validate_on_submit():
+        if supply is None:
+            supply = Supply()
+
+        supply.name = form.name.data
+        supply.city = form.city.data
+        supply.buyer = form.buyer.data
+        supply.order_contact = form.order_contact.data
+        supply.tel = form.tel.data
+        supply.address = form.address.data
+        supply.email = form.email.data
+        supply.payment_mathod = form.payment_method.data
+        supply.bank_account = form.bank_account.data
+        supply.evidence = form.evidence.data
+        db.session.add(supply)
+        db.session.commit()
+        return redirect(url_for('suppliers'))
+    return render_template('edit_supply.html', form=form)
+
+
+@app.route('/supply_detail/<supply_id>')
+@login_required
+def supply_detail(supply_id):
+    supply = Supply.query.get(supply_id)
+    
+    return render_template('supply_detail.html', supply=supply)
 
 
 @app.route('/staffs')

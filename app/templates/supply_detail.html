@@ -1,0 +1,69 @@
+{% extends 'layout.html' %}
+{% block title %}供货商详情{% endblock %}
+{% block content %}
+
+  <div class="x_panel">
+    <div class="x_title">
+      <h2>供应商详情</h2>
+      <div class="clearfix"></div>
+    </div>
+    <div class="x_content">
+      <table class="table table-striped" cellpadding="10">
+        <thead>
+          <tr>
+          
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">厂商名称:</th>
+            <td>{{supply.name}}</td>
+          </tr>
+          <tr>
+            <th scope="row">区域:</th>
+            <td>{{supply.city}}</td>
+          </tr>
+          <tr>
+            <th scope="row">采购员:</th>
+            <td>{{supply.buyer}}</td>
+          </tr>
+          <tr>
+            <th scope="row">订货联系人:</th>
+            <td>{{supply.order_contact}}</td>
+          </tr>
+          <tr>
+            <th scope="row">联系电话:</th>
+            <td>{{supply.city}}</td>
+          </tr>
+          <tr>
+            <th scope="row">联系地址:</th>
+            <td>{{supply.address}}</td>
+          </tr>          
+          <tr>
+            <th scope="row">联系邮箱:</th>
+            <td>{{supply.email}}</td>
+          </tr>
+          <tr>
+            <th scope="row">总经理</th>
+            <td>{{supply.manager}}</td>
+          </tr>
+          <tr>
+            <th scope="row">付款方式:</th>
+            <td>{{supply.payment_method}}</td>
+          </tr>
+          <tr>
+            <th scope="row">银行账户:</th>
+            <td>{{supply.bank_account}}</td>
+          </tr>
+          <tr>
+            <th scope="row">凭证类别:</th>
+            <td>{{supply.evidence}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+  
+{% endblock %}
+

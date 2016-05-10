@@ -21,7 +21,13 @@ class AddSupplyForm(Form):
     city = StringField('city')
     buyer = StringField('buyer')
     order_contact = StringField('order_contact')
-    contact_information = StringField('contact_information',validators=[DataRequired()])
+    tel = StringField('tel',validators=[DataRequired()])
+    address = StringField('address')
+    email= StringField('email')
+    manager= StringField('manager')
+    payment_method= StringField('payment_method')
+    bank_account= StringField('bank_account')
+    evidence= StringField('evidence')
 
 
 

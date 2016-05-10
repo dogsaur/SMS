@@ -24,7 +24,7 @@
 			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">区域</th>
 			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">采购员</th>
 			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">订货联系人</th>
-			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">联系方式</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">联系电话</th>
 			
 			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">操作</th>
 		</tr>
@@ -38,14 +38,14 @@
 			<td>{{supply.city}}</td>
 			<td>{{supply.buyer}}</td>
 			<td>{{supply.order_contact}}</td>
-			<td>{{supply.contact_information}}</td>
+			<td>{{supply.tel}}</td>
 			<td>
 				<div class="btn-group" >
 					<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">操作 <span class="caret"></span>
 					</button>
 					<ul role="menu" class="dropdown-menu">
-						<li><a href="#">详情</a></li>
-						<li><a>修改</a></li>
+						<li><a href="{{url_for('supply_detail',supply_id=supply.id)}}">详情</a></li>
+						<li><a href="{{url_for('edit_supply', supply_id=supply.id)}}">修改</a></li>
 						<li class="divider"></li><li><a href="#">删除</a></li>
 					</ul>
 				</div>

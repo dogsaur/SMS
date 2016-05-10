@@ -1,9 +1,9 @@
 {% extends 'layout.html' %}
-{% block title %}编辑供应商{% endblock %}
+{% block title %}编辑供货商{% endblock %}
 {% block content %}
 <form enctype="multipart/form-data" class="form-horizontal form-label-left" method="post">
   {{form.hidden_tag()}}
-  <span class="section">增加供应商</span>
+  <span class="section">修改供货商信息</span>
   <div class="item form-group">
     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="name">厂商名称 <span class="required">*</span>
     </label>
@@ -13,25 +13,26 @@
   </div>
 
   <div class="item form-group"> 
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">区域 <span class="required">*</span>
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="city">区域 <span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      {{form.city(type="text", id="barcode",  required="required", class="form-control col-md-7 col-xs-12")}}
-    </div>
-  </div>
-  <div class="item form-group"> 
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">采购员 <span class="required">*</span>
-    </label>
-    <div class="col-md-6 col-sm-6 col-xs-12">
-      {{form.buyer(type="text", id="buyer",  required="required", class="form-control col-md-7 col-xs-12")}}
+      {{form.city(type="text", id="city",  required="required", class="form-control col-md-7 col-xs-12")}}
     </div>
   </div>
 
-  <div class="item form-group"> 
-    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="bar_code">订货联系人 <span class="required">*</span>
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="buyer">采购员 <span class="required">*</span>
     </label>
     <div class="col-md-6 col-sm-6 col-xs-12">
-      {{form.order_contact(type="text", id="ordercontact",  required="required", class="form-control col-md-7 col-xs-12")}}
+      {{form.buyer(required="required",  class="form-control col-md-7 col-xs-12")}}
+    </div>
+  </div>
+
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="order_contact">订货联系人<span class="required">*</span> 
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      {{form.order_contact(id="order", class="form-control col-md-7 col-xs-12")}}
     </div>
   </div>
 
@@ -90,13 +91,18 @@
       {{form.evidence(type="text", id="evidence",  required="required", class="form-control col-md-7 col-xs-12")}}
     </div>
   </div>
-
-
-    <div class="ln_solid"></div>
+  
+  <div class="item form-group">
+    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="textarea">备注
+    </label>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+      <textarea id="textarea" name="textarea" class="form-control col-md-7 col-xs-12"></textarea>
+    </div>
+  </div>
+  <div class="ln_solid"></div>
   <div class="form-group">
     <div class="col-md-6 col-md-offset-3">
-      <!--button type="submit" class="btn btn-primary">Cancel</button-->
-      <button type="submit" class="btn btn-success">提交</button>
+      <button type="submit" class="btn btn-success">Submit</button>
     </div>
   </div>
 </form>
