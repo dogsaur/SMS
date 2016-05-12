@@ -62,8 +62,12 @@ class Customer(db.Model):
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String)
+    category = db.Column(db.String)
     bar_code = db.Column(db.Integer)
+    size = db.Column(db.String)
+    inprice = db.Column(db.Numeric)
     price = db.Column(db.Numeric)
+    supply = db.Column(db.Integer, db.ForeignKey('supply.id'))
     picture_id = db.Column(db.Integer, db.ForeignKey('image.id'))
 
     def picture(self):
@@ -81,7 +85,23 @@ class TradeRecord(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'))
     userid = db.Column(db.Integer, db.ForeignKey('user.id'))
+    quantity = db.Column(db.Integer)
+    total_price = db.Column(db.Numeric)
     time = db.Column(db.DateTime)
+
+    def product_name(self):
+        product = Product.query.get(self.product_id)
+        if product is not None:
+            return product.name
+        return "product_name"
+
+
+    def product_price(self):
+        product = Product.query.get(self.product_id)
+        if product is not None:
+            return product.price
+        return "product_price"
+
 
 class Supply(db.Model):
     id = db.Column(db.Integer, primary_key=True)

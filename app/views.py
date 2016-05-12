@@ -1,8 +1,9 @@
 from flask import render_template, request, flash, redirect, session, url_for, g
 from flask.ext.login import login_user, logout_user, login_required, current_user
 from app import app, db, lm, avators, pics
-from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm, AddSupplyForm
+from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm, AddSupplyForm, AddTradeRecord
 from .models import User, Image, Customer, Product, TradeRecord, Supply
+import time
 
 
 @app.route('/')
@@ -57,6 +58,7 @@ def user(username):
         return redirect(url_for('index'))
     return render_template('user.html', user=user)
 
+
 @app.route('/product_info/<product_id>')
 @login_required
 def product_info(product_id):
@@ -73,6 +75,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
+
 @app.route('/add_user', methods=['GET', 'POST'])
 @login_required
 def add_user():
@@ -83,9 +86,10 @@ def add_user():
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
-    return render_template("add_user.html", form = form)
+    return render_template("add_user.html", form=form)
 
-@app.route('/add_supply',methods=['GET','POST'])
+
+@app.route('/add_supply', methods=['GET', 'POST'])
 @login_required
 def add_supply():
     form = AddSupplyForm()
@@ -98,7 +102,28 @@ def add_supply():
         supply.tel = form.tel.data
         db.session.add(supply)
         db.session.commit()
-    return render_template("add_supply.html",form =form)
+    return render_template("add_supply.html", form=form)
+
+
+@app.route('/add_traderecord', methods=['GET', 'POST'])
+@login_required
+def add_traderecord():
+    form = AddTradeRecord()
+    if form.validate_on_submit():
+        traderecord = TradeRecord()
+        bar_code = form.bar_code.data
+        product = Product.query.filter_by(bar_code=bar_code)
+        if product is not None:
+            traderecord.product_id = product.id
+            traderecord.quantity = form.quantity.data
+            traderecord.banker = form.banker.data
+            traderecord.customer = form.customer.data
+            traderecord.time = time.localtime(time.time())
+            db.session.add(traderecord)
+            db.session.commit()
+            return render_template("add_traderecord.html", traderecord=traderecord)
+    return render_template("add_traderecord.html", form=form)
+
 
 @app.route('/edit_profile/<uid>', methods=['GET', 'POST'])
 @login_required
@@ -125,7 +150,7 @@ def edit_user_profile(uid):
 @login_required
 def trade():
     trades = TradeRecord.query.all()
-    return render_template('trade.html', trades = trades, Product = Product)
+    return render_template('trade.html', trades=trades, Product=Product)
 
 
 @app.route('/customers')
@@ -148,8 +173,12 @@ def edit_product(product_id):
     product = Product.query.get(product_id)
     if product is not None:
         form = ProductInfoForm(name=product.product_name,
-                               barcode=product.bar_code,
+                               category=product.category,
+                               bar_code=product.bar_code,
+                               size=product.size,
+                               inprice=product.inprice,
                                price=product.price,
+                               supply=product.supply,
                                image=product.picture())
     else:
         form = ProductInfoForm()
@@ -163,8 +192,12 @@ def edit_product(product_id):
         if product is None:
             product = Product()
         product.product_name = form.name.data
+        product.category = form.category.data
+        product.bar_code = form.bar_code.data
+        product.size = form.size.data
+        product.inprice = form.inprice.data
         product.price = form.price.data
-        product.bar_code = form.barcode.data
+        product.supply = form.supply.data
         try:
             filename = pics.save(request.files['image'])
             img = Image(path="pics/" + filename)
@@ -178,21 +211,22 @@ def edit_product(product_id):
         return redirect(url_for('products'))
     return render_template('edit_product.html', form=form)
 
+
 @app.route('/edit_supply/<supply_id>', methods=['GET', 'POST'])
 @login_required
 def edit_supply(supply_id):
     supply = Supply.query.get(supply_id)
     if supply is not None:
         form = AddSupplyForm(name=supply.name,
-                               city=supply.city,
-                               buyer=supply.buyer,
-                               order_contact=supply.order_contact,
-                               tel=supply.tel,
-                               address=supply.address,
-                               email=supply.email,
-                               payment_mathod=supply.payment_method,
-                               bank_account=supply.bank_account,
-                               evidence=supply.evidence)
+                             city=supply.city,
+                             buyer=supply.buyer,
+                             order_contact=supply.order_contact,
+                             tel=supply.tel,
+                             address=supply.address,
+                             email=supply.email,
+                             payment_mathod=supply.payment_method,
+                             bank_account=supply.bank_account,
+                             evidence=supply.evidence)
     else:
         form = AddSupplyForm()
 
@@ -225,7 +259,7 @@ def edit_supply(supply_id):
 @login_required
 def supply_detail(supply_id):
     supply = Supply.query.get(supply_id)
-    
+
     return render_template('supply_detail.html', supply=supply)
 
 
@@ -233,14 +267,14 @@ def supply_detail(supply_id):
 @login_required
 def staffs():
     users = User.query.all()
-    return render_template('staffs.html', users = users)
+    return render_template('staffs.html', users=users)
 
 
 @app.route('/suppliers')
 @login_required
 def suppliers():
     suppliers = Supply.query.all()
-    return render_template('suppliers.html',suppliers = suppliers)
+    return render_template('suppliers.html', suppliers=suppliers)
 
 
 @app.route('/project_info')
