@@ -1,0 +1,35 @@
+{% extends "base_theme.html" %}
+{% block title %}403页面{% endblock %}
+{% block content %}
+<body class="nav-md">
+
+  <div class="container body">
+
+    <div class="main_container">
+
+      <!-- page content -->
+      <div class="col-md-12">
+        <div class="col-middle">
+          <div class="text-center text-center">
+            <h1 class="error-number">403</h1>
+            <h2>对不起, 您没有权限访问该网页</h2>
+            <p>请向系统管理员确认您的权限</p>
+            <a href="mailto:admin@outlook.com">联系管理员?</a>
+          </div>
+        </div>
+      </div>
+      <!-- /page content -->
+
+    </div>
+    <!-- footer content -->
+  </div>
+
+  <div id="custom_notifications" class="custom-notifications dsp_none">
+    <ul class="list-unstyled notifications clearfix" data-tabbed_notifications="notif-group">
+    </ul>
+    <div class="clearfix"></div>
+    <div id="notif-group" class="tabbed_notifications"></div>
+  </div>
+
+</body>
+{% endblock %}

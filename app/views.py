@@ -1,35 +1,27 @@
-from flask import render_template, request, flash, redirect, session, url_for, g
-from flask.ext.login import login_user, logout_user, login_required, current_user
-from app import app, db, lm, avators, pics
-from .forms import LoginForm, UserProfileForm, ProductInfoForm, AddUserForm, AddSupplyForm, AddTradeRecord
-from .models import User, Image, Customer, Product, TradeRecord, Supply
 import time
+from flask import render_template, request, \
+    flash, redirect, session, url_for, g, \
+    current_app
+from flask.ext.login import login_user, \
+    logout_user, login_required, current_user
+from flask.ext.principal import Identity, \
+    AnonymousIdentity, identity_changed, \
+    identity_loaded, RoleNeed, UserNeed
+from app import app, db, lm, avators, pics, admin_permission
+from .forms import LoginForm, UserProfileForm, \
+    ProductInfoForm, AddUserForm, AddSupplyForm, \
+    AddTradeRecord
+from .models import User, Image, Customer, \
+    Product, TradeRecord, Supply
 
 
 @app.route('/')
 @app.route('/index')
 @login_required
+#@admin_permission.require()
 def index():
     user = g.user
-    data = [
-        [0, 40],
-        [1, 9],
-        [2, 6],
-        [3, 10],
-        [4, 5],
-        [5, 17],
-        [6, 6],
-        [7, 10],
-        [8, 7],
-        [9, 11],
-        [10, 35],
-        [11, 9],
-        [12, 12],
-        [13, 5],
-        [14, 3],
-        [15, 4],
-        [16, 9]
-    ]
+    data = []
     return render_template('index.html',
                            title='Home',
                            user=user,
@@ -43,14 +35,47 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user is not None and user.password == form.password.data:
             login_user(user)
+            identity_changed.send(current_app._get_current_object(),
+                             identity=Identity(user.id))
             return redirect(url_for('index'))
     return render_template('login.html',
-                           title='Sign In',
+                           title='登陆',
                            form=form)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    # Remove session keys set by Flask-Principal
+    for key in ('identity.name', 'identity.auth_type'):
+        session.pop(key, None)
+
+    # Tell Flask-Principal the user is anonymous
+    identity_changed.send(current_app._get_current_object(),
+                          identity=AnonymousIdentity())
+    return redirect(url_for('index'))
+
+
+@identity_loaded.connect_via(app)
+def on_identity_loaded(sender, identity):
+    # Set the identity user object
+    identity.user = current_user
+
+    # Add the UserNeed to the identity
+    if hasattr(current_user, 'id'):
+        identity.provides.add(UserNeed(current_user.id))
+
+    # Assuming the User model has a list of roles, update the
+    # identity with the roles that the user provides
+    if hasattr(current_user, 'group'):
+        print(current_user.id, current_user.group)
+        identity.provides.add(RoleNeed(current_user.group))
 
 
 @app.route('/user/<username>')
 @login_required
+@admin_permission.require(http_exception=403)
 def user(username):
     user = User.query.filter_by(username=username).first()
     if user is None:
@@ -61,6 +86,7 @@ def user(username):
 
 @app.route('/product_info/<product_id>')
 @login_required
+@admin_permission.require(http_exception=403)
 def product_info(product_id):
     product = Product.query.get(product_id)
     if product_id is None:
@@ -69,15 +95,9 @@ def product_info(product_id):
     return render_template('product_info.html', product=product)
 
 
-@app.route('/logout')
-@login_required
-def logout():
-    logout_user()
-    return redirect(url_for('index'))
-
-
 @app.route('/add_user', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def add_user():
     form = AddUserForm()
     if form.validate_on_submit():
@@ -91,6 +111,7 @@ def add_user():
 
 @app.route('/add_supply', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def add_supply():
     form = AddSupplyForm()
     if form.validate_on_submit():
@@ -107,6 +128,7 @@ def add_supply():
 
 @app.route('/add_traderecord', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def add_traderecord():
     form = AddTradeRecord()
     if form.validate_on_submit():
@@ -127,6 +149,7 @@ def add_traderecord():
 
 @app.route('/edit_profile/<uid>', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def edit_user_profile(uid):
     form = UserProfileForm()
     user = User.query.get(uid)
@@ -148,6 +171,7 @@ def edit_user_profile(uid):
 
 @app.route('/trade')
 @login_required
+@admin_permission.require(http_exception=403)
 def trade():
     trades = TradeRecord.query.all()
     return render_template('trade.html', trades=trades, Product=Product)
@@ -155,6 +179,7 @@ def trade():
 
 @app.route('/customers')
 @login_required
+@admin_permission.require(http_exception=403)
 def customers():
     customers = Customer.query.all()
     return render_template('customers.html', customers=customers)
@@ -162,6 +187,7 @@ def customers():
 
 @app.route('/products')
 @login_required
+@admin_permission.require(http_exception=403)
 def products():
     products = Product.query.all()
     return render_template('products.html', products=products)
@@ -169,6 +195,7 @@ def products():
 
 @app.route('/edit_product/<product_id>', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def edit_product(product_id):
     product = Product.query.get(product_id)
     if product is not None:
@@ -214,6 +241,7 @@ def edit_product(product_id):
 
 @app.route('/edit_supply/<supply_id>', methods=['GET', 'POST'])
 @login_required
+@admin_permission.require(http_exception=403)
 def edit_supply(supply_id):
     supply = Supply.query.get(supply_id)
     if supply is not None:
@@ -257,6 +285,7 @@ def edit_supply(supply_id):
 
 @app.route('/supply_detail/<supply_id>')
 @login_required
+@admin_permission.require(http_exception=403)
 def supply_detail(supply_id):
     supply = Supply.query.get(supply_id)
 
@@ -265,6 +294,7 @@ def supply_detail(supply_id):
 
 @app.route('/staffs')
 @login_required
+@admin_permission.require(http_exception=403)
 def staffs():
     users = User.query.all()
     return render_template('staffs.html', users=users)
@@ -272,6 +302,7 @@ def staffs():
 
 @app.route('/suppliers')
 @login_required
+@admin_permission.require(http_exception=403)
 def suppliers():
     suppliers = Supply.query.all()
     return render_template('suppliers.html', suppliers=suppliers)
@@ -279,8 +310,14 @@ def suppliers():
 
 @app.route('/project_info')
 @login_required
+@admin_permission.require(http_exception=403)
 def project_info():
     return render_template('project_info.html')
+
+
+@app.errorhandler(403)
+def forbidden(e):
+    return render_template('page_403.html')
 
 
 @lm.user_loader
