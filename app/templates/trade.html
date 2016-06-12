@@ -7,7 +7,8 @@
 			<th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 88px;">流水号</th>
 			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">商品名称</th>
 			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">数量</th>
-			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">价格</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">单价</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">总价</th>
 			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">交易时间</th>
 			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">收银员</th>
 			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">客户</th>
@@ -20,11 +21,12 @@
 		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
 			<td class="sorting_1"> {{trade.id}} </td>
 			<td><a href="{{url_for('product_info', product_id = product.id)}}">{{product.product_name}}</a></td>
-			<td>0</td>
+			<td>{{trade.quantity}}</td>
 			<td>{{'%0.2f' | format(product.price)}}</td>
+			<td>{{'%0.2f' | format(product.price*trade.quantity)}}</td>
 			<td>{{trade.time}}</td>
-			<td>收银1</td>
-			<td>客户1</td>
+			<td><a href="{{trade.get_casher().info_link()}}">{{trade.get_casher().name}}</td>
+			<td>{{trade.get_customer().customer_name}}</td>
 		</tr>
 		{% endfor %}
 	</tbody>

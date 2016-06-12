@@ -156,8 +156,8 @@ def trade():
 @app.route('/customers')
 @login_required
 def customers():
-    customer = Customer.query.get(1)
-    return render_template('customers.html', cst=customer)
+    customers = Customer.query.all()
+    return render_template('customers.html', customers=customers)
 
 
 @app.route('/products')

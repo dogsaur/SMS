@@ -15,3 +15,6 @@ print(trades)
 
 suppliers = models.Supply.query.all()
 print(suppliers)
+
+customers = models.Customer.query.all()
+print(customers)

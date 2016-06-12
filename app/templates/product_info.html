@@ -18,34 +18,35 @@
         <tbody>
           <tr>
             <th scope="row">商品名称:</th>
-            <td>{{supply.name}}</td>
+            <td>{{product.product_name}}</td>
           </tr>
           <tr>
             <th scope="row">类别:</th>
-            <td>{{supply.city}}</td>
+            <td>{{product.category}}</td>
           </tr>
           <tr>
             <th scope="row">商品条形码:</th>
-            <td>{{supply.buyer}}</td>
+            <td>{{product.bar_code}}</td>
           </tr>
           <tr>
             <th scope="row">规格:</th>
-            <td>{{supply.order_contact}}</td>
+            <td>{{product.size}}</td>
           </tr>
           <tr>
           	<th scope="row">图片:</th>
+            <td>{{product.size}}</td>
           </tr>
           <tr>
             <th scope="row">进价:</th>
-            <td>{{supply.city}}</td>
+            <td>{{product.inprice}}</td>
           </tr>
           <tr>
             <th scope="row">零售价:</th>
-            <td>{{supply.address}}</td>
+            <td>{{product.price}}</td>
           </tr>          
           <tr>
             <th scope="row">供应商:</th>
-            <td>{{supply.email}}</td>
+            <td>{{product.supply()}}</td>
           </tr>
           <tr>
         </tbody>
@@ -54,8 +55,4 @@
     </div>
   </div>
   
-{% endblock %}
-
-
-
 {% endblock %}

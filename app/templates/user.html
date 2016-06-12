@@ -2,40 +2,43 @@
 {% extends "layout.html" %}
 
 {% block content %}
-      <div id="register" class="animate form">
-        <section class="login_content">
-          <form>
-            <h1>Create Account</h1>
-            <div>
-              <input type="text" class="form-control" placeholder="Username" required="" />
-            </div>
-            <div>
-              <input type="email" class="form-control" placeholder="Email" required="" />
-            </div>
-            <div>
-              <input type="password" class="form-control" placeholder="Password" required="" />
-            </div>
-            <div>
-              <a class="btn btn-default submit" href="index.html">Submit</a>
-            </div>
-            <div class="clearfix"></div>
-            <div class="separator">
+  <div class="panel">
+    <div class="title">
+      <h2>员工信息</h2>
+      <div class="table"></div>
+    </div>
+    <div class="content">
+      <table class="table table-striped" cellpadding="30">
+        <thead>
+          <tr>
+          
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">姓名:</th>
+            <td>{{user.name}}</td>
+          </tr>
+          <tr>
+            <th scope="row">邮箱:</th>
+            <td>{{user.email}}</td>
+          </tr>
+          <tr>
+            <th scope="row">分组:</th>
+            <td>{{user.group}}</td>
+          </tr>
+          <tr>
+            <th scope="row">权限:</th>
+            <td>{{user.right}}</td>
+          </tr>
+          <tr>
+            <th scope="row">图片:</th>
+            <td><img src="{{user.avatar()}}" width="150" height="150" /></td>
+          </tr>
+        </tbody>
+      </table>
 
-              <p class="change_link">Already a member ?
-                <a href="#tologin" class="to_register"> Log in </a>
-              </p>
-              <div class="clearfix"></div>
-              <br />
-              <div>
-                <h1><i class="fa fa-paw" style="font-size: 26px;"></i>喜悦购物中心超市管理系统</h1>
-
-                
-              </div>
-            </div>
-          </form>
-          <!-- form -->
-        </section>
-        <!-- content -->
-      </div>
+    </div>
+  </div>
 
 {% endblock %}
