@@ -1,3 +1,4 @@
+# encoding: utf-8
 import time
 from flask import render_template, request, \
     flash, redirect, session, url_for, g, \
@@ -21,11 +22,17 @@ from .models import User, Image, Customer, \
 #@admin_permission.require()
 def index():
     user = g.user
-    data = []
-    return render_template('index.html',
-                           title='Home',
-                           user=user,
-                           data=data)
+    if user.group == 1:
+        data = []
+        return render_template('index.html',
+                               title='Home',
+                               user=user,
+                               data=data)
+    else:
+        return render_template('casher_index.html',
+                               title='收银员主页',
+                               user=user)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
