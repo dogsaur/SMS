@@ -18,7 +18,7 @@ lm.init_app(app)
 lm.login_view = 'login'
 
 Principal(app)
-admin_permission = Permission(RoleNeed(2))
+admin_permission = Permission(RoleNeed(1))
 
 avators = UploadSet('avators', IMAGES)
 configure_uploads(app, avators)
