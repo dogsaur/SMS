@@ -20,11 +20,9 @@
 	<thead>
 		<tr role="row">
 			<th class="sorting_asc" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 88px;">员工编号</th>
-			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">员工类别</th>
-			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">姓名</th>
-			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">状态</th>
-			<!--权限需有链接-->
-			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 61px;">权限</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 152px;">员工姓名</th>
+			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 61px;">照片</th>
+			<th class="sorting" tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 25px;">组</th>
 			
 			<th tabindex="0" aria-controls="datatable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 44px;">操作</th>
 		</tr>
@@ -36,9 +34,14 @@
 		<tr role="row" class="{{loop.cycle('odd', 'even')}}">
 			<td class="sorting_1"> {{user.id}} </td>
 			<td>{{user.name}}</td>
-			<td><img src="{{user.avatar()}}" width="75" height="75"></td>
-			<td>0</td>
-			<td>0</td>
+			<td><img src="{{user.avatar()}}" width="60" height="84"></td>
+			<td>
+			{% if user.group %}
+				管理员
+			{% else %}
+				收银员
+			{% endif %}
+			</td>
 			<td>
 				<div class="btn-group" >
 					<button data-toggle="dropdown" class="btn btn-primary dropdown-toggle btn-sm" type="button" aria-expanded="true">操作 <span class="caret"></span>
