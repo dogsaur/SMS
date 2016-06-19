@@ -18,3 +18,7 @@ print(suppliers)
 
 customers = models.Customer.query.all()
 print(customers)
+
+stocks = models.StockRecord.query.all()
+print(stocks)
+

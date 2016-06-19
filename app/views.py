@@ -1,5 +1,5 @@
 # encoding: utf-8
-import time
+import time, datetime
 from flask import render_template, request, \
     flash, redirect, session, url_for, g, \
     current_app
@@ -11,28 +11,46 @@ from flask.ext.principal import Identity, \
 from app import app, db, lm, avators, pics, admin_permission
 from .forms import LoginForm, UserProfileForm, \
     ProductInfoForm, AddUserForm, AddSupplyForm, \
-    AddTradeRecord
+    AddTradeRecord, StockInventoryForm,AddCustomerForm
 from .models import User, Image, Customer, \
-    Product, TradeRecord, Supply
+    Product, TradeRecord, Supply, StockRecord
 
 
 @app.route('/')
-@app.route('/index')
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 #@admin_permission.require()
 def index():
     user = g.user
     if user.group == 1:
-        data = []
-        return render_template('index.html',
+        data = [1,2,3,4,5,6,7,5,7,1,9]
+        return render_template('index1.html',
                                title='Home',
                                user=user,
                                data=data)
     else:
-        return render_template('casher_index.html',
-                               title='收银员主页',
-                               user=user)
-
+        form = AddTradeRecord()
+        commited = False
+        if form.validate_on_submit():
+            traderecord = TradeRecord()
+            bar_code = form.bar_code.data
+            product = Product.query.filter_by(bar_code=bar_code).first()
+            if product is not None:
+                if not commited:
+                    traderecord.product_id = product.id
+                    traderecord.quantity = form.quantity.data
+                    traderecord.userid = g.user.id
+                    traderecord.customer_id = Customer.query.filter_by(customer_name=form.customer.data).first().id
+                    traderecord.time = datetime.datetime.now()
+                    db.session.add(traderecord)
+                    db.session.commit()
+                    commited = True
+                    return render_template("casher_index.html", traderecord=traderecord, form=form)
+                else:
+                    form = AddTradeRecord()
+                    traderecord = TradeRecord()
+                    commited = False
+        return render_template("casher_index.html", form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -43,7 +61,7 @@ def login():
         if user is not None and user.password == form.password.data:
             login_user(user)
             identity_changed.send(current_app._get_current_object(),
-                             identity=Identity(user.id))
+                                  identity=Identity(user.id))
             return redirect(url_for('index'))
     return render_template('login.html',
                            title='登陆',
@@ -107,13 +125,71 @@ def product_info(product_id):
 @admin_permission.require(http_exception=403)
 def add_user():
     form = AddUserForm()
-    if form.validate_on_submit():
+    if form.is_submitted():
         user = User()
         user.username = form.username.data
         user.password = form.password.data
         db.session.add(user)
         db.session.commit()
     return render_template("add_user.html", form=form)
+
+@app.route('/add_customer', methods=['GET', 'POST'])
+@login_required
+@admin_permission.require(http_exception=403)
+def add_customer():
+    form = AddCustomerForm()
+    if form.validate_on_submit():
+        customer = Customer()
+        customer.customer_name = form.customer_name.data
+        customer.tel = form.tel.data
+        customer.email = form.email.data
+        customer.is_vip = form.is_vip.data
+        customer.vip_number = form.vip_number.data
+        db.session.add(customer)
+        db.session.commit()
+    return render_template("add_customer.html", form=form)
+
+
+@app.route('/remove_customer/<customer_id>', methods=['GET', 'POST'])
+@login_required
+@admin_permission.require(http_exception=403)
+def remove_customer(customer_id):
+    cu = Customer.query.get(customer_id)
+    if cu is not None:
+        db.session.delete(cu)
+        db.session.commit()
+    return redirect(url_for('customers'))
+
+
+@app.route('/remove_supply/<supply_id>', methods=['GET', 'POST'])
+@login_required
+@admin_permission.require(http_exception=403)
+def remove_supply(supply_id):
+    supply = Supply.query.get(supply_id)
+    if supply is not None:
+        db.session.delete(supply)
+        db.session.commit()
+    return redirect(url_for('suppliers'))
+
+@app.route('/remove_user/<user_id>', methods=['GET', 'POST'])
+@login_required
+@admin_permission.require(http_exception=403)
+def remove_user(user_id):
+    user = User.query.get(user_id)
+    if user is not None:
+        db.session.delete(user)
+        db.session.commit()
+    return redirect(url_for('staffs'))
+
+@app.route('/remove_product/<product_id>', methods=['GET', 'POST'])
+@login_required
+@admin_permission.require(http_exception=403)
+def remove_product(product_id):
+    product = Product.query.get(product_id)
+    if product is not None:
+        db.session.delete(product)
+        db.session.commit()
+    return redirect(url_for('products'))
 
 
 @app.route('/add_supply', methods=['GET', 'POST'])
@@ -158,16 +234,29 @@ def add_traderecord():
 @login_required
 @admin_permission.require(http_exception=403)
 def edit_user_profile(uid):
-    form = UserProfileForm()
     user = User.query.get(uid)
     if user is None:
         user = User()
-    if form.validate_on_submit():
+    form = UserProfileForm(name=user.name,
+                           email=user.email,
+                           password=user.password,
+                           user_type=user.group)
+    if form.is_submitted():
+        app.logger.error('edit_user validate')
         filename = avators.save(request.files['avator'])
         img = Image(path="avatars/" + filename)
         db.session.add(img)
         db.session.commit()
         user.avator_id = img.id
+
+        if form.name is not None:
+            user.name = form.name.data
+        if form.email is not None:
+            user.email = form.email.data
+        if form.password is not None:
+            user.password = form.password.data
+        if form.user_type is not None:
+            user.group = form.user_type.data
         db.session.add(user)
         db.session.commit()
         # g.user.store()
@@ -192,12 +281,39 @@ def customers():
     return render_template('customers.html', customers=customers)
 
 
-@app.route('/products')
+@app.route('/products', methods=['GET', 'POST'])
 @login_required
 @admin_permission.require(http_exception=403)
 def products():
     products = Product.query.all()
-    return render_template('products.html', products=products)
+    stock_form = StockInventoryForm()
+    app.logger.error('before stock_form validate')
+    app.logger.error(stock_form.errors)
+    app.logger.error(stock_form.is_submitted())
+    app.logger.error(stock_form.validate_on_submit())
+    if stock_form.is_submitted():
+        app.logger.error('stock_form validate')
+        stock_record = StockRecord()
+        stock_record.quantity = stock_form.quantity.data
+        stock_record.supply_id = stock_form.supply_id.data
+        stock_record.inprice = stock_form.inprice.data
+        stock_record.product_id = stock_form.product_id.data
+
+        app.logger.error(stock_record)
+        product = Product.query.get(stock_record.product_id)
+        if product.inventory is None:
+            product.inventory = 0
+        product.inventory += stock_record.quantity
+        try:
+            db.session.add(stock_record)
+            db.session.commit()
+        except Exception as e:
+            app.logger.error(e)
+
+        app.logger.error(stock_form.supply_id)
+    return render_template('products.html',
+                           products=products,
+                           stock_form=stock_form)
 
 
 @app.route('/edit_product/<product_id>', methods=['GET', 'POST'])

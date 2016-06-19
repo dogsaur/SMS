@@ -72,6 +72,7 @@ class Product(db.Model):
     size = db.Column(db.String)
     inprice = db.Column(db.Numeric)
     price = db.Column(db.Numeric)
+    inventory = db.Column(db.Integer)
     supply_id = db.Column(db.Integer, db.ForeignKey('supply.id'))
     picture_id = db.Column(db.Integer, db.ForeignKey('image.id'))
 
@@ -142,3 +143,15 @@ class Supply(db.Model):
 
     def __repr__(self):
         return '<Supply name=%r, city=%r>' % (self.name, self.city)
+
+
+class StockRecord(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    supply_id = db.Column(db.Integer, db.ForeignKey('supply.id'))
+    quantity = db.Column(db.Integer)
+    inprice = db.Column(db.Numeric)
+    time = db.Column(db.DateTime)
+
+    def __repr__(self):
+        return '<Stock product_id=%r, / quantity=%r' % (self.product_id, self.quantity)
